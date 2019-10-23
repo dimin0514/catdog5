@@ -1,4 +1,4 @@
-package com.catdog5.web.persistence;
+package com.catdog.web.persistence;
 
 import static org.junit.Assert.fail;
 
