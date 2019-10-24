@@ -44,7 +44,7 @@ public class CustomerCtl {
 	@PostMapping("/{cid}")
 	public Customer login(@RequestBody Customer param){
 		IFunction<Customer,Customer> f = o-> customerMapper.selectById(param);
-		return f.apply(param);
+		return f.apply(param);  
 	}
 	@GetMapping("/{cid}")
 	public Customer searchCustomerById(@PathVariable String cid, @RequestBody Customer param) {
