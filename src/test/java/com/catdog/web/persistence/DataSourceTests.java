@@ -10,7 +10,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 
-import com.catdog.web.config.RootConfig;
+import com.catdog.web.cfg.RootConfig;
 
 import lombok.extern.log4j.Log4j;
 
