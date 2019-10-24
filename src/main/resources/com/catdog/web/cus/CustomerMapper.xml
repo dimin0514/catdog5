@@ -4,14 +4,23 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.catdog.web.cus.CustomerMapper">
 
-    <insert id="insertCustomer" parameterType="com.catdog.web.cus.Customer">
+    <insert id="insertCustomer" parameterType="Customer">
         insert into CUSTOMER (CID, PWD, SSN, CREDITCARD, PNAME, PHONE, ADDRESS, EMAIL) values (
             #{cid}, #{pwd}, #{ssn}, #{creditcard}, #{pname}, #{phone}, #{address}, #{email}
         )
     </insert>
-    <select id="selectCustomerId" resultType="Customer">
+    <select id="selectCustomerById" resultType="Customer">
         SELECT * FROM CUSTOMER
         	 WHERE CID LIKE #{cid}
     </select>     
-
+    <select id="selectCustomerByIdPw" resultType="Customer">
+        SELECT * FROM CUSTOMER
+        	 WHERE CID LIKE #{cid} and PWD LIKE #{pwd}
+    </select>
+    <select id="existId"   resultType="int">
+      SELECT COUNT(*) FROM CUSTOMER WHERE CID LIKE #{cid} 
+    </select>
+    <select id="lastCNum" resultType="int">
+		SELECT MAX(CNUM)  CNUM FROM CUSTOMER
+	</select>
 </mapper>

@@ -35,23 +35,9 @@ auth = (()=>{
         	setContentView()					// 경로따가라면 이게 첫 페이지임!!
     		$('#a_go_join').click(e=>{
          		e.preventDefault()
-         		join()
-    		})
-        }).fail(()=>{alert(WHEN_ERR)})
-    }
-	
-	
-    let setContentView =()=>{
-    	 login();
-    }
-	
-
-	let join =()=>{
-		$.getScript(auth_vue_js)
-		$('head')
-		.html(auth_vue.join_head())
-        $('body')
-        .html(auth_vue.join_body())
+         				$.getScript(auth_vue_js)
+		$('head').html(auth_vue.join_head())
+        $('body').html(auth_vue.join_body())
 		$('<button>',{
 			text : 'Continue to checkout', // text에 값이 있으면 set 방식 , 빈칸으로 하면
 											// get방식
@@ -63,8 +49,48 @@ auth = (()=>{
 				// e 는 이벤트 디폴트 방식을 방지한다...
 				let data = {cid:$('#userid').val(), pwd:$('#password').val(),pname:$('#pname').val()} 
 				// 제이슨 타입으로 보내야 하니깐.. 제이슨이 들어가야함!! 중요한건 자바 받는녀석과 맞춰야함!
+				if(existId(data.cid)==='true')
+					alert(existId(data.cid))
+					join(data)
+			} 
+        })
+		.addClass("btn btn-primary btn-lg btn-block")
+		.appendTo('#btn_join')  
+    		})
+        }).fail(()=>{alert(WHEN_ERR)})
+    }
+	let existId = x =>{
+
+		$.ajax({
+			url : _+'/customers/'+x+'/exist', 
+			type : 'GET',
+			contentType : 'application/json',
+			success : d =>{
+				if (d.msg==='SUCCESS') {
+					alert('없는 아이디 입니다 ' + d.msg);
+					return true;
+				}else{
+					alert('있는 아이디 입니다.');	
+				return false;
+				}
+			},
+			error : e =>{
+				alert('error' )
+				return false;
+			}
+		})    
+		
+	}
+	
+    let setContentView =()=>{
+    	 login();
+    }
+	
+
+	let join =data=>{
+
 				$.ajax({
-					url : _+'/customer',
+					url : _+'/customers/',
 					type : 'POST',       // 일단은 그냥 빠르게 보이게... 원래는 숨겨야 해서 POST
 											// 방식이어야함! 타입은 4개 crud, put get
 											// delete
@@ -74,53 +100,52 @@ auth = (()=>{
 													// 컨트롤러에서 스트링으로 받는다고 해놔서
 													// 스트링화.
 					contentType : 'application/json',   //밈? jsp 에서도 contentType="text/html; 이라고 있
-					success : d => {
-						alert('AJAX 성공아이디:'+d.cid+',성공비번'+d.pwd+',P네임'+d.pname);
-						login()
-					}, // send , d는 자바에서의 map
-					error : e => {
-						alert('AJAX 실패')
-					} // receive
-					// ajax 는 제이쿼리와 다르게 스트링은 안줌 $.({}) cf)제이쿼리는 $.( ,{})
-				})
-			}
-		})
-		.addClass("btn btn-primary btn-lg btn-block")
-		.appendTo('#btn_join')
-    }
-	let login =()=>{
-		let x = {css: $.css(), img: $.img()}
-		$('head')
-		.html(auth_vue.login_head(x))
-		$('body')
-		.addClass("text-center")
-		.html(auth_vue.login_body(x))
-		
-		$('<button>',{
-			type:"submit",
-			text:"Sign in",
-			click : e=>{
-				e.preventDefault();
-				let data = {cid:$('#cid').val(),pwd:$('#pwd').val(),pname:$('#pname').val()}  //auth_vue 에 login_body 에 있는 cid pwd
-				$.ajax({
-					url:_+'/customer/login',
-					type: 'POST',
-					dataType: 'json',
-					data :JSON.stringify(data),
-					contentType : 'application/json',
 					success : d =>{
-						alert(d.pname+'님 환영합니다')
-						$('body').html(auth_vue.login_mypage(d))
+						alert('AJAX 성공 ' + d.msg)
+						if (d.msg==='SUCCESS') 
+							login()
+					},
 					error : e =>{
-						alert('ajax실패')
+						alert('AJAX실패' )
 					}
-					}
-				})
-			}	
-		})
-		.addClass("btn btn-lg btn-primary btn-block")
-		.appendTo('#btn_login')
-    }
-
+				})    
+	}
+	let login =()=>{
+	    let x = {css: $.css(), img: $.img()}
+	    $('head').html(auth_vue.login_head(x))
+	    $('body').addClass('text-center')
+	      .html(auth_vue.login_body(x))
+	        $('<button>',{
+	        	text : "Sign in",
+	        	click : e => {
+	        		e.preventDefault()
+	        		$.ajax({
+	        			url: _+'/customers/login',
+	        			type: 'POST',
+	        			data: JSON.stringify({cid:$('#cid').val(),pwd:$('#pwd').val()}),
+	        			dataType: 'json',
+	        			contentType: 'application/json',
+	        			success: d =>{
+	        				alert(d.pname+' 님 환영합니다')
+	        				mypage(d)
+	        			},
+	        			error: e =>{
+	        				alert('AJAX 실패 ')
+	        			}
+	        			
+	        		})
+	        	}
+	        })
+	        .addClass("btn btn-lg btn-primary btn-block")
+	        .appendTo('#btn_login')
+	}
+	let mypage =d=>{
+	let x = {css : $.css(), img : $.img(), js:$.js(), resultData: d}
+		$('head').html(auth_vue.brd_head(x))
+		$('body')
+		.addClass('text-center')
+		.html(auth_vue.brd_body(x))
+	}
 	return{onCreate, join, login}
 })();
+

@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@MapperScan (basePackages = ("com.catdag.web"))
+@MapperScan (basePackages = ("com.catdog.web"))
 public class MybatisConfig {
 	@Autowired
 	ApplicationContext applicationContext;

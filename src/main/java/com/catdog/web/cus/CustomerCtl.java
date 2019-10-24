@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.catdog.web.cmm.IConsumer;
 import com.catdog.web.cmm.IFunction;
+import com.catdog.web.cmm.IPredicate;
+import com.catdog.web.cmm.ISupplier;
 import com.catdog.web.utl.Printer;
 
 import lombok.extern.log4j.Log4j;
 
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/customers")
 
 public class CustomerCtl {
 	public static Logger logger = LoggerFactory.getLogger(CustomerCtl.class);
@@ -29,40 +31,51 @@ public class CustomerCtl {
 	@Autowired Customer customer;
 	@Autowired Printer printer;
 	@Autowired CustomerMapper customerMapper;
+	
+	@GetMapping("/{cid}/exist")
+	public Map<?, ?> existId(@PathVariable String cid){
+		System.out.println("중복진입");
+		IFunction<String,Integer> f = t -> customerMapper.existId(cid);
+		map.clear();
+		map.put("msg",(f.apply(cid)==0) ? "SUCCESS":"FAIL");
+		return map;
+	}
 
 	@PostMapping("/")  
-	public String join(@RequestBody Customer param) {  
-		logger.info("AJAX가 보낸 아이디 와 비번 pname{}",param.getCid()+","+param.getPwd()+","+param.getPname());
-		
+	public Map<?,?> join(@RequestBody Customer param) {  
+		printer.accept("로그인으로 들어옴:"+param.toString());
 		IConsumer<Customer> c= t->customerMapper.insertCustomer(t);
 		c.accept(param);
-		
-			
-		
-		return "SUCCESS";
+		map.clear();
+		map.put("msg", "SUCCESS");
+		return map;
 	}
 	@PostMapping("/{cid}")
-	public Customer login(@RequestBody Customer param){
-		IFunction<Customer,Customer> f = o-> customerMapper.selectById(param);
+	public Customer login(@PathVariable String cid, @RequestBody Customer param){
+		IFunction<Customer,Customer> f = o-> customerMapper.selectCustomerById(param);
 		return f.apply(param);  
 	}
 	@GetMapping("/{cid}")
 	public Customer searchCustomerById(@PathVariable String cid, @RequestBody Customer param) {
-		IFunction<Customer,Customer> f = o-> customerMapper.selectById(param);
+		IFunction<Customer,Customer> f = o-> customerMapper.selectCustomerById(param);
 		return f.apply(param);
 	}
 
 	@PutMapping("/{cid}")
-	public String updateCustomer(@PathVariable String cid, @RequestBody Customer param) {
+	public Map<?,?> updateCustomer(@PathVariable String cid, @RequestBody Customer param) {
 		IConsumer<Customer> c= t->customerMapper.insertCustomer(t);
 		c.accept(param);
-		return "SUCCESS";
+		map.clear();
+		map.put("msg", "SUCCESS");
+		return map;
 	}
 	@DeleteMapping("/{cid}")
-	public String removeCustomer(@PathVariable String cid, @RequestBody Customer param) {
+	public Map<?,?> removeCustomer(@PathVariable String cid, @RequestBody Customer param) {
 		IConsumer<Customer> c= t->customerMapper.insertCustomer(t);
 		c.accept(param);
-		return "SUCCESS";
+		map.clear();
+		map.put("msg", "SUCCESS");
+		return map;
 	}
 
 }
