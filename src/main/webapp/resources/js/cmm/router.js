@@ -11,3 +11,9 @@ function Session(x){
 		img : ()=>{return sessionStorage.getItem('img');},
 	}
 }
+function Customer(x){
+	sessionStorage.setItem('cid',x);
+	return{
+		scid:()=>{return sessionStorage.getItem('cid');}
+	}
+}

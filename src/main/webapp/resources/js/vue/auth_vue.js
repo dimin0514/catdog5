@@ -86,7 +86,7 @@ auth_vue = {
         '      </form>'+
         '    </div>'+
         '    <div class="col-md-8 order-md-1">'+
-        '      <h4 class="mb-3">Billing address</h4>'+
+        '      <h4 class="mb-3">회원 가입</h4>'+
         '      <form class="needs-validation" novalidate="">'+
         '        <div class="row">'+
         '          <div class="col-md-6 mb-3">'+
@@ -97,12 +97,16 @@ auth_vue = {
         '            </div>'+
         '          </div>'+
         '          <div class="col-md-6 mb-3">'+
-        '            <label for="password">PASSWORD</label>'+
-        '            <input type="text" class="form-control" id="password" placeholder="" value="" required="">'+
+        '            <label for="password">아이디 중복체크</label>'+
+        '            <input type="text" class="form-control" id="dupl_check" placeholder="" value="" required="">'+
         '            <div class="invalid-feedback">'+
         '              Valid last name is required.'+
         '            </div>'+
         '          </div>'+
+        '        </div>'+
+        '        <div class="mb-3">'+
+        '          <label for="address2">비빌번호 <span class="text-muted"></span></label>'+
+        '          <input type="text" class="form-control" id="password" placeholder="Apartment or suite">'+
         '        </div>'+
         '        <div class="mb-3">'+
         '          <label for="pname">PNAME</label>'+
@@ -129,10 +133,6 @@ auth_vue = {
         '          <div class="invalid-feedback">'+
         '            Please enter your shipping address.'+
         '          </div>'+
-        '        </div>'+
-        '        <div class="mb-3">'+
-        '          <label for="address2">Address 2 <span class="text-muted">(Optional)</span></label>'+
-        '          <input type="text" class="form-control" id="address2" placeholder="Apartment or suite">'+
         '        </div>'+
         '        <div class="row">'+
         '          <div class="col-md-5 mb-3">'+

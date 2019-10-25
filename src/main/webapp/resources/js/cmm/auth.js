@@ -1,12 +1,14 @@
 "use strict";
 var auth = auth || {};  // 있으면 가져오고 없으면 새로 널(빈땅)객체로 새로 만들어라.
 auth = (()=>{
-	let _,js,auth_vue_js;
+	let _,js,auth_vue_js,brd_js,router_js;
 	
 	let init =()=>{
 		_ = $.ctx();
 		js = $.js();
 		auth_vue_js = js+'/vue/auth_vue.js'
+		brd_js = js+'/brd/brd.js'
+		router_js = js+'/cmm/router.js'
 		
 	}
 //	let onCreate =()=>{
@@ -31,27 +33,55 @@ auth = (()=>{
 //	}
     let onCreate =()=>{
         init()
+        $.getScript(router_js),
         $.getScript(auth_vue_js).done(()=>{
         	setContentView()					// 경로따가라면 이게 첫 페이지임!!
     		$('#a_go_join').click(e=>{
          		e.preventDefault()
-         				$.getScript(auth_vue_js)
-		$('head').html(auth_vue.join_head())
-        $('body').html(auth_vue.join_body())
-		$('<button>',{
-			text : 'Continue to checkout', // text에 값이 있으면 set 방식 , 빈칸으로 하면
+        		$.getScript(auth_vue_js)
+        		$('head').html(auth_vue.join_head())
+        		$('body').html(auth_vue.join_body())
+        		$('#userid').keyup(()=>{
+        			if($('#userid').val().length>2){
+	        			$.ajax({
+	        				url : _+'/customers/'+$('#userid').val()+'/exist', 
+	        				contentType : 'application/json',
+	        				success : d =>{
+	        					alert("ajax d 진입"+d.msg)
+	        					if (d.msg==='SUCCESS') {
+	        						$('#dupl_check')
+	        						.val("사용가능한 아이디 입니다.")
+	        						.css('color','blue')
+//	        						return true;
+	        					}else{
+	        						$('#dupl_check')
+	        						.val("이미 있는 아이디 입니다.")
+	        						.css('color','red')
+//	        						alert('있는 아이디 입니다.');	
+//	        					return false;
+	        					}
+	        				},
+	        				error : e =>{
+	        					alert('error' )
+	        					return false;
+	        				}
+	        			})
+        			}
+        		});
+        		$('<button>',{
+        			text : 'Continue to checkout', // text에 값이 있으면 set 방식 , 빈칸으로 하면
 											// get방식
-			href : '#',
-			click: e=>{
-				e.preventDefault(); // 이게 form 태그를 막는거? form 태그 방식으로 하려면 홈컨트롤러에서
+        			href : '#',
+        			click: e=>{
+        				e.preventDefault(); // 이게 form 태그를 막는거? form 태그 방식으로 하려면 홈컨트롤러에서
 									// soap 방식으로 해야함. ajax 는 soap 방식 안됨!! herf 도
 									// 삭제..
-				// e 는 이벤트 디폴트 방식을 방지한다...
-				let data = {cid:$('#userid').val(), pwd:$('#password').val(),pname:$('#pname').val()} 
-				// 제이슨 타입으로 보내야 하니깐.. 제이슨이 들어가야함!! 중요한건 자바 받는녀석과 맞춰야함!
-				if(existId(data.cid)==='true')
-					alert(existId(data.cid))
-					join(data)
+						// e 는 이벤트 디폴트 방식을 방지한다...
+						let data = {cid:$('#userid').val(), pwd:$('#password').val(),pname:$('#pname').val()} 
+						// 제이슨 타입으로 보내야 하니깐.. 제이슨이 들어가야함!! 중요한건 자바 받는녀석과 맞춰야함!
+		//				if(existId(data.cid)==='true')
+		//					alert(existId(data.cid))
+						join(data)
 			} 
         })
 		.addClass("btn btn-primary btn-lg btn-block")
@@ -59,28 +89,28 @@ auth = (()=>{
     		})
         }).fail(()=>{alert(WHEN_ERR)})
     }
-	let existId = x =>{
-
-		$.ajax({
-			url : _+'/customers/'+x+'/exist', 
-			type : 'GET',
-			contentType : 'application/json',
-			success : d =>{
-				if (d.msg==='SUCCESS') {
-					alert('없는 아이디 입니다 ' + d.msg);
-					return true;
-				}else{
-					alert('있는 아이디 입니다.');	
-				return false;
-				}
-			},
-			error : e =>{
-				alert('error' )
-				return false;
-			}
-		})    
-		
-	}
+//	let existId = x =>{
+//
+//		$.ajax({
+//			url : _+'/customers/'+x+'/exist', 
+//			type : 'GET',
+//			contentType : 'application/json',
+//			success : d =>{
+//				if (d.msg==='SUCCESS') {
+//					alert('없는 아이디 입니다 ' + d.msg);
+//					return true;
+//				}else{
+//					alert('있는 아이디 입니다.');	
+//				return false;
+//				}
+//			},
+//			error : e =>{
+//				alert('error' )
+//				return false;
+//			}
+//		})    
+//		
+//	}
 	
     let setContentView =()=>{
     	 login();
@@ -111,10 +141,10 @@ auth = (()=>{
 				})    
 	}
 	let login =()=>{
-	    let x = {css: $.css(), img: $.img()}
-	    $('head').html(auth_vue.login_head(x))
+
+	    $('head').html(auth_vue.login_head({css: $.css(), img: $.img()}))
 	    $('body').addClass('text-center')
-	      .html(auth_vue.login_body(x))
+	      .html(auth_vue.login_body({css: $.css(), img: $.img()}))
 	        $('<button>',{
 	        	text : "Sign in",
 	        	click : e => {
@@ -126,8 +156,14 @@ auth = (()=>{
 	        			dataType: 'json',
 	        			contentType: 'application/json',
 	        			success: d =>{
+	        				$.getScript(brd_js,()=>{
+//	        					sessionStorage.setItem('cid',d.cid);
+	        					$.extend(new Customer($('#cid').val()))
+	        					brd.onCreate()
+	        				})
 	        				alert(d.pname+' 님 환영합니다')
-	        				mypage(d)
+	        			
+
 	        			},
 	        			error: e =>{
 	        				alert('AJAX 실패 ')
@@ -140,11 +176,11 @@ auth = (()=>{
 	        .appendTo('#btn_login')
 	}
 	let mypage =d=>{
-	let x = {css : $.css(), img : $.img(), js:$.js(), resultData: d}
-		$('head').html(auth_vue.brd_head(x))
-		$('body')
-		.addClass('text-center')
-		.html(auth_vue.brd_body(x))
+		let x = {css : $.css(), img : $.img(), js:$.js(), resultData: d}
+			$('head').html(auth_vue.brd_head(x))
+			$('body')
+			.addClass('text-center')
+			.html(auth_vue.brd_body(x))
 	}
 	return{onCreate, join, login}
 })();
