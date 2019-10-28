@@ -12,8 +12,13 @@ function Session(x){
 	}
 }
 function Customer(x){
-	sessionStorage.setItem('cid',x);
+	sessionStorage.setItem('cid',x.cid);
+	sessionStorage.setItem('pwd',x.pwd);
+	sessionStorage.setItem('ssn',x.ssn);
+	//cid,pwd,ssn,creditcard,pname,phone,address,email
 	return{
-		scid:()=>{return sessionStorage.getItem('cid');}
+		cusId:()=>{return sessionStorage.getItem('cid');},
+		cusPwd:()=>{return sessionStorage.getItem('pwd');},
+		cusSsn:()=>{return sessionStorage.getItem('ssn');}
 	}
 }

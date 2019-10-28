@@ -155,15 +155,20 @@ auth = (()=>{
 	        			data: JSON.stringify({cid:$('#cid').val(),pwd:$('#pwd').val()}),
 	        			dataType: 'json',
 	        			contentType: 'application/json',
-	        			success: d =>{
-	        				$.getScript(brd_js,()=>{
-//	        					sessionStorage.setItem('cid',d.cid);
-	        					$.extend(new Customer($('#cid').val()))
-	        					brd.onCreate()
-	        				})
-	        				alert(d.pname+' 님 환영합니다')
-	        			
-
+	        			success: d =>{  //d가 곧 customer(ctrl의 login param )
+	        				$.when(
+	        						$.getScript(brd_js,()=>{
+//	    	        					sessionStorage.setItem('cid',d.cid);
+	    	        					$.extend(new Customer(d))
+	    	        				}),
+	        						$.getScript(router_js)
+	        				).done(
+	        						brd.onCreate(), // 게시판 첫번째 그려지는거.. 그러니깐 이 전에 정보가 담겨져 있어야 그림에 담김
+	        						alert(d.pname+' 님 환영합니다')
+	        				).fail(()=>{
+	        					alert('when done 실패')
+	        				})       				
+	        				
 	        			},
 	        			error: e =>{
 	        				alert('AJAX 실패 ')
