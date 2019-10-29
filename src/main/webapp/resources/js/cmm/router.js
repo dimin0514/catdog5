@@ -17,8 +17,8 @@ function Customer(x){
 	sessionStorage.setItem('ssn',x.ssn);
 	//cid,pwd,ssn,creditcard,pname,phone,address,email
 	return{
-		cusId:()=>{return sessionStorage.getItem('cid');},
-		cusPwd:()=>{return sessionStorage.getItem('pwd');},
-		cusSsn:()=>{return sessionStorage.getItem('ssn');}
+		cid:()=>{return sessionStorage.getItem('cid');},
+		pwd:()=>{return sessionStorage.getItem('pwd');},
+		ssn:()=>{return sessionStorage.getItem('ssn');}
 	}
 }

@@ -8,5 +8,15 @@
             #{cid}, #{boardType}, #{title}, #{content}
         )
     </insert>
+    <select id="countArtseq" resultType="int">
+    SELECT COUNT(*) from ARTICLES
+    </select>
+    <select id="selectAll" resultType="Article">
+    	SELECT A.BOARD_TYPE AS boardType, A.* FROM ARTICLES A
+    </select>
+    <delete id="deleteArticle" parameterType="Article">
+    	delete from ARTICLES where ARTICLESEQ like #{articleseq}
+    </delete>
+
   </mapper>
   
