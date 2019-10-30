@@ -69,7 +69,7 @@ public class ArticleCtl {
 		return article;
 	}
 	@PutMapping("/{articleseq}")
-	public Article UpdateArticle(@PathVariable String articleseq, @RequestBody Article param) {
+	public Article updateArticle(@PathVariable String articleseq, @RequestBody Article param) {
 		list.clear();
 		IConsumer<Article> c =  t -> articleMapper.modify(param);
 		c.accept(param);

@@ -2,7 +2,7 @@
 var brd = brd || {};
 brd = (()=>{
 	let _,js,brd_vuejs, brd_js , navi_js, navi_vue_js
-//	, $cid
+
 	let init=()=>{
 		_ = $.ctx()
 		js = $.js()
@@ -10,7 +10,7 @@ brd = (()=>{
 		brd_vuejs = js+'/vue/brd_vue.js'
 		navi_js = js+'/cmm/navi.js'
 		navi_vue_js = js+'/vue/navi_vue.js'
-//		$cid = $.cid()
+
 	}
 	let onCreate=()=>{                 //동적인거 여기에다 다 넣음?
 		init()

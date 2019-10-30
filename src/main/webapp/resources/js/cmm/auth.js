@@ -102,7 +102,8 @@ auth = (()=>{
        	$('head').html(auth_vue.login_head({css: $.css(), img: $.img()}))
         $('body').addClass('text-center')
         .html(auth_vue.login_body({css: $.css(), img: $.img()}))
-    	 login();
+    	login();
+       	access()
     }
 	
 
@@ -167,6 +168,32 @@ auth = (()=>{
 			$('body')
 			.addClass('text-center')
 			.html(auth_vue.brd_body(x))
+	}
+	let access =()=>{
+		$('#a_go_admin').click(()=>{
+			let ok = confirm('사원입니까?')
+			if(ok){
+				let aid = prompt('사원번호 입력하세요')
+				$.ajax({
+					url:_+'/admins/'+aid,
+					type:'POST',
+					data:JSON.stringify({aid :aid, pwd : prompt('비밀번호를 입력하세요')}),
+					dataType:'json',
+					contentType:'application/json',
+					success:d=>{
+						if(d === 'SUCCESS'){
+							alert('환영합니다')
+							admin.onCreate()
+						}else{
+							alert('접근권한이 없습니다.')
+							app.run(_)
+						}	
+					},
+					error:e=>{}
+				})
+				
+			}
+		})
 	}
 	return{onCreate, join, login}
 })();
