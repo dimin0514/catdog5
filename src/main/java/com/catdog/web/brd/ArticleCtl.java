@@ -51,7 +51,6 @@ public class ArticleCtl {
 		ISupplier<List<Article>> s =()-> articleMapper.selectAll();
 		printer.accept("전체글목록\n"+s.get());
 		return s.get();
-			
 	}
 	
 	@GetMapping("/count") //겟매핑에서 아무것도 없으면 전체를 가져와라
@@ -64,29 +63,25 @@ public class ArticleCtl {
 	}
 	
 	@GetMapping("/{articleseq}")
-	public Article read(@PathVariable String articleseq,@RequestBody Article param) {
-		
-		return null;
+	public Article readArticle(@PathVariable String articleseq) {
+		ISupplier<Article> c = ()-> articleMapper.selectArticle(articleseq);
+		article = c.get();
+		return article;
 	}
 	@PutMapping("/{articleseq}")
-	public Article update(@PathVariable String articleseq, @RequestBody Article param) {
-		return null;
+	public Article UpdateArticle(@PathVariable String articleseq, @RequestBody Article param) {
+		list.clear();
+		IConsumer<Article> c =  t -> articleMapper.modify(param);
+		c.accept(param);
+		ISupplier<Article> d = ()-> articleMapper.selectArticle(articleseq);
+		article = d.get();
+		return article;
 	}
-//	@DeleteMapping("/{articleseq}")
-//	public Map<?,?> delete(@PathVariable String articleseq, @RequestBody Article param) {
-//		IConsumer<Article> c = new IConsumer<Article>() {
-//			
-//			@Override
-//			public void accept(Article t) {
-//				// TODO Auto-generated method stub
-//				
-//			}
-//		};
-//		return null;
-//	}
+
 	@DeleteMapping("/{articleseq}")
 	public Map<?,?> delete(@PathVariable String articleseq, @RequestBody Article param) {
-		IConsumer<Article> c =  t -> articleMapper.deleteArticle(t);
+		map.clear();
+		IConsumer<Article> c =  t -> articleMapper.deleteArticle(param);
 		c.accept(param);
 		map.clear();
 		map.put("msg","success");

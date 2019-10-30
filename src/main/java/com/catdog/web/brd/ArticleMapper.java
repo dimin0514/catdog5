@@ -11,6 +11,8 @@ public interface ArticleMapper {
 	public void insertArticle(Article param);
 	public int countArtseq();
 	public List<Article> selectAll();
+	public Article selectArticle(String articleseq);
 	public void deleteArticle(Article param);
+	public void modify(Article param);
 
 }

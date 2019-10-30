@@ -14,9 +14,14 @@
     <select id="selectAll" resultType="Article">
     	SELECT A.BOARD_TYPE AS boardType, A.* FROM ARTICLES A
     </select>
+    <select id="selectArticle" resultType="Article">
+		SELECT * FROM ARTICLES WHERE ARTICLESEQ LIKE #{articleseq}
+	</select>
     <delete id="deleteArticle" parameterType="Article">
-    	delete from ARTICLES where ARTICLESEQ like #{articleseq}
+    	DELETE FROM ARTICLES WHERE ARTICLESEQ LIKE #{articleseq}
     </delete>
+	<update id="modify"  parameterType="Article">
+  		UPDATE ARTICLES SET TITLE = #{title}, CONTENT = #{content} WHERE ARTICLESEQ LIKE #{articleseq}
+	</update>
 
   </mapper>
-  

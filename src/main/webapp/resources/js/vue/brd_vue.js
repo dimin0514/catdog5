@@ -1,72 +1,84 @@
 var brd_vue = brd_vue || {}
 brd_vue = {
 		brd_head:()=>{
-			    				return '<head>'+
-			    				'    <meta charset="utf-8">'+
-			    				'    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">'+
-			    				'    <meta name="description" content="">'+
-			    				'    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">'+
-			    				'    <meta name="generator" content="Jekyll v3.8.5">'+
-			    				'    <title>Offcanvas template · Bootstrap</title>'+
-			    				'    <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/offcanvas/">'+
-			    				'    <!-- Bootstrap core CSS -->'+
-			    				'<link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">'+
-			    				'    <style>'+
-			    				'      .bd-placeholder-img {'+
-			    				'        font-size: 1.125rem;'+
-			    				'        text-anchor: middle;'+
-			    				'        -webkit-user-select: none;'+
-			    				'        -moz-user-select: none;'+
-			    				'        -ms-user-select: none;'+
-			    				'        user-select: none;'+
-			    				'      }'+
-			    				'      @media (min-width: 768px) {'+
-			    				'        .bd-placeholder-img-lg {'+
-			    				'          font-size: 3.5rem;'+
-			    				'        }'+
-			    				'      }'+
-			    				'    </style>'+
-			    				'    <!-- Custom styles for this template -->'+
-			    				'    <link href="https://getbootstrap.com/docs/4.3/examples/offcanvas/offcanvas.css" rel="stylesheet">'+
-			    				'    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">'+
-			    				'  </head>'
+			return '<head>'+
+			'    <meta charset="utf-8">'+
+		    '	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">'+
+			'	<meta name="description" content="">'+
+			'	<meta name="author" content="">'+
+		    '    <link rel="icon" href="https://getbootstrap.com/docs/4.0/assets/img/favicons/favicon.ico">'+
+			'    <title>Offcanvas template for Bootstrap</title>'+
+			'    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/offcanvas/">'+
+			'    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">'+
+			'    <link href="https://getbootstrap.com/docs/4.0/examples/offcanvas/offcanvas.css" rel="stylesheet">'+
+			'    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">'+
+			'  </head>'
+//			    				return '<head>'+
+//			    				'    <meta charset="utf-8">'+
+//			    				'    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">'+
+//			    				'    <meta name="description" content="">'+
+//			    				'    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">'+
+//			    				'    <meta name="generator" content="Jekyll v3.8.5">'+
+//			    				'    <title>Offcanvas template · Bootstrap</title>'+
+//			    				'    <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/offcanvas/">'+
+//			    				'    <!-- Bootstrap core CSS -->'+
+//			    				'<link href="https://getbootstrap.com/docs/4.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">'+
+//			    				'    <style>'+
+//			    				'      .bd-placeholder-img {'+
+//			    				'        font-size: 1.125rem;'+
+//			    				'        text-anchor: middle;'+
+//			    				'        -webkit-user-select: none;'+
+//			    				'        -moz-user-select: none;'+
+//			    				'        -ms-user-select: none;'+
+//			    				'        user-select: none;'+
+//			    				'      }'+
+//			    				'      @media (min-width: 768px) {'+
+//			    				'        .bd-placeholder-img-lg {'+
+//			    				'          font-size: 3.5rem;'+
+//			    				'        }'+
+//			    				'      }'+
+//			    				'    </style>'+
+//			    				'    <!-- Custom styles for this template -->'+
+//			    				'    <link href="https://getbootstrap.com/docs/4.3/examples/offcanvas/offcanvas.css" rel="stylesheet">'+
+//			    				'    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css">'+
+//			    				'  </head>'
 			    			},
-		brd_body: ()=>{
+		brd_body: x=>{
 			return  '<body class="bg-light">'+
-			'    <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">'+
-			'      <a class="navbar-brand" href="#"><i class="fab fa-angellist fa-2x"></i></a>'+
-			'      <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">'+
-			'        <span class="navbar-toggler-icon"></span>'+
-			'      </button>'+
-
-			'      <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">'+
-			'        <ul class="navbar-nav mr-auto">'+
-			'          <li id="go_write"  class="nav-item active"></li>'+
-			'          <li class="nav-item">'+
-			'            <a class="nav-link" href="#">Notifications</a>'+
-			'          </li>'+
-			'          <li class="nav-item">'+
-			'            <a class="nav-link" href="#">Profile</a>'+
-			'          </li>'+
-			'          <li class="nav-item">'+
-			'            <a class="nav-link" href="#">Switch account</a>'+
-			'          </li>'+
-			'          <li class="nav-item dropdown">'+
-			'            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>'+
-			'            <div class="dropdown-menu" aria-labelledby="dropdown01">'+
-			'              <a class="dropdown-item" href="#">Action</a>'+
-			'              <a class="dropdown-item" href="#">Another action</a>'+
-			'              <a class="dropdown-item" href="#">Something else here</a>'+
-			'            </div>'+
-			'          </li>'+
-			'        </ul>'+
-			'        <form class="form-inline my-2 my-lg-0">'+
-			'          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">'+
-			'          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>'+
-			'        </form>'+
-			'      </div>'+
-			'    </nav>'+
-
+			'<div id="navi"></div>'+
+//			'    <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">'+
+//			'      <a class="navbar-brand" href="#"><i class="fab fa-angellist fa-2x"></i></a>'+
+//			'      <button class="navbar-toggler p-0 border-0" type="button" data-toggle="offcanvas">'+
+//			'        <span class="navbar-toggler-icon"></span>'+
+//			'      </button>'+
+//
+//			'      <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">'+
+//			'        <ul class="navbar-nav mr-auto">'+
+//			'          <li id="go_write"  class="nav-item active"></li>'+
+//			'          <li class="nav-item">'+
+//			'            <a id="logout" class="nav-link" href="#">Notifications</a>'+
+//			'          </li>'+
+//			'          <li class="nav-item">'+
+//			'            <a class="nav-link" href="#">Profile</a>'+
+//			'          </li>'+
+//			'          <li class="nav-item">'+
+//			'            <a class="nav-link" href="#">Switch account</a>'+
+//			'          </li>'+
+//			'          <li class="nav-item dropdown">'+
+//			'            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>'+
+//			'            <div class="dropdown-menu" aria-labelledby="dropdown01">'+
+//			'              <a class="dropdown-item" href="#">Action</a>'+
+//			'              <a class="dropdown-item" href="#">Another action</a>'+
+//			'              <a class="dropdown-item" href="#">Something else here</a>'+
+//			'            </div>'+
+//			'          </li>'+
+//			'        </ul>'+
+//			'        <form class="form-inline my-2 my-lg-0">'+
+//			'          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">'+
+//			'          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>'+
+//			'        </form>'+
+//			'      </div>'+
+//			'    </nav>'+
 			'    <div class="nav-scroller bg-white box-shadow">'+
 			'      <nav class="nav nav-underline">'+
 			'        <a class="nav-link active" href="#">Dashboard</a>'+
@@ -161,7 +173,7 @@ brd_vue = {
 			'    <!-- Bootstrap core JavaScript'+
 			'    ================================================== -->'+
 			'    <!-- Placed at the end of the document so the pages load faster -->'+
-			'    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"  crossorigin="anonymous"></script>'+
+			'    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" ></script>'+
 			'    <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/popper.min.js"></script>'+
 			'    <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>'+
 			'    <script src="https://getbootstrap.com/docs/4.0/assets/js/vendor/holder.min.js"></script>'+

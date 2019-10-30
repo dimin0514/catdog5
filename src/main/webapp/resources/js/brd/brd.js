@@ -1,37 +1,34 @@
 "use strict"
 var brd = brd || {};
 brd = (()=>{
-	let _,js,brd_vuejs,brd_js, $cid, $form , router_js
+	let _,js,brd_vuejs, brd_js , navi_js, navi_vue_js
+//	, $cid
 	let init=()=>{
-		_ = $.ctx();
-		js = $.js();
-		brd_js = js+'/brd/brd.js';
-		brd_vuejs = js+'/vue/brd_vue.js';
-		router_js= js+'cmm/router.js'
-		$cid = $.cid()
-		
+		_ = $.ctx()
+		js = $.js()
+		brd_js = js+'/brd/brd.js'
+		brd_vuejs = js+'/vue/brd_vue.js'
+		navi_js = js+'/cmm/navi.js'
+		navi_vue_js = js+'/vue/navi_vue.js'
+//		$cid = $.cid()
 	}
 	let onCreate=()=>{                 //동적인거 여기에다 다 넣음?
 		init()
-		$.getScript(brd_vuejs,()=>{
-		setContentView()
-		navigation()
-//		$('<a>',{
-//			href:'#',
-//			click:e=>{
-//				e.preventDefault();
-//				write()
-//			},
-//			text:'글쓰기'
-//		})
-//		.css('color','white')
-//		.addClass('nav-link')
-//		.appendTo('#go_write')	
+		$.when(
+				$.getScript(brd_vuejs),
+				$.getScript(navi_js),
+				$.getScript(navi_vue_js)
+				).done(()=>{
+					setContentView()
+					navi.onCreate()
+				}).fail(()=>{
+					alert(WHEN_ERR)
 		})
 	}
 	let setContentView=()=>{
 			$('head').html(brd_vue.brd_head({css: $.css(), img: $.img()}))
 			$('body').addClass('text-center').html(brd_vue.brd_body({css: $.css(), img: $.img()}))
+			$(navi_vue.nav()).appendTo('#navi')
 			recent_updates()
 	}
 	let recent_updates=()=>{                        //x가 d.count
@@ -84,31 +81,9 @@ brd = (()=>{
 	
 	let write=()=>{
 		$('#recent_updates').html(brd_vue.brd_write())
-		alert('사용자 아이디'+$cid)
-		$('#write_form input[name="writer"]').val($cid)
+//		alert('사용자 아이디'+cid)
+		$('#write_form input[name="writer"]').val(getCookie("cid"))
 		$('#suggestions').remove()
-//		$('<a>',{
-//			href:'#',
-//			click:e=>{
-//				e.preventDefault();
-//			
-//			},
-//			text:'리셋'
-//		})
-//		.css('float:right','width:100px','margin-right:10px')
-//		.addClass('btn btn-danger')
-//		.appendTo('#reset_btn')
-//		$('<a>',{
-//			href:'#',
-//			click:e=>{
-//				e.preventDefault();
-//			
-//			},
-//			text:'전송'
-//		})
-//		.css('float:right','width:100px','margin-right:10px')
-//		.addClass('btn btn-primary')
-//		.appendTo('#write_btn')
 		$('<input>',{
 			style:'float:right;width:100px;margin-right:10px',
 			value:'전송'	
@@ -123,8 +98,7 @@ brd = (()=>{
 					content:$('#write_form textarea').val()
 			}
 			alert('id'+json.cid+'글제목'+json.title+'글내용'+json.content)
-//			console.log('글제목'+josn.title)
-//			console.log('글내용'+josn.content)
+			alert('-?'+_)
 			$.ajax({		//ajax 는 무조건 리턴이 있어야함!! 파라미터가 있는 녀석과 없는 녀석, 람다함수는 fuction. supply
 				url:_+'/articles/',
 				type:'POST',
@@ -132,7 +106,6 @@ brd = (()=>{
 				dataType:'json',
 				contentType:'application/json',
 				success:d=>{
-					
 					$('#recent_updates div.container-fluid').remove()
 					recent_updates()
 					
@@ -156,21 +129,20 @@ brd = (()=>{
 		.click(()=>{			
 		})
 	}
-	let navigation=()=>{
-		$('<a>',{
-			href:'#',
-			click:e=>{
-				e.preventDefault();
-				write()
-			},
-			text:'글쓰기'
-		})
-		.css('color','white')
-		.addClass('nav-link')
-		.appendTo('#go_write')	
-	}
+
+//		$('<a>',{
+//			href:'#',
+//			click:e=>{
+//				e.preventDefault();
+//				write()
+//			},
+//			text:'글쓰기'
+//		})  
+//		.css('color','white')
+//		.addClass('nav-link')
+//		.appendTo('#go_write')	
+	
 	let detail = x =>{
-		alert('dd')
 		$('#recent_updates').html(brd_vue.brd_write())
 		$('#recent_updates div.container-fluid h1').html("아티클 디테일")
 		$('#write_form input[name="writer"]').val(x.cid)
@@ -183,20 +155,22 @@ brd = (()=>{
 		})
 		.addClass('btn btn-primary')
 		.appendTo('#write_form')
-		.click(()=>{
-			alert('넘어오는값?'+x.articleseq)
-			$ajax({
-				url:_+'articles/'+x.articleseq,
-				type:'DELETE',
-				data:JSON.stringify(x),
-				dataType:'json',
+		.click(e=>{
+				e.preventDefault()
+				$.ajax({
+				url : _+'/articles/'+x.articleseq,
+				type : 'DELETE',
+				dataType : 'json',
+				data : JSON.stringify(x),
 				contentType:'application/json',
 				success:d=>{
 					alert('삭제 성공')
+				    write()
+					$('#recent_updates div.container-fluid').remove()
 					recent_updates()
 				},
 				error:d=>{
-					alert('ajax 실패')
+					alert('ajax 삭제 실패')
 				}
 			})
 			
@@ -208,11 +182,42 @@ brd = (()=>{
 		})
 		.addClass('btn btn-danger')
 		.appendTo('#write_form')
-		.click(()=>{			
+		.click(e=>{		
+			e.preventDefault()
+	 		alert('수정 시작')
+	 		let json = { 
+				articleseq :  $('#write_form input[name="brdseq"]').val() ,
+				content : $('#write_form textarea[name="content"]').val()
+			}     	
+			$.ajax({
+				url : _+'/articles/'+x.articleseq,
+				type : 'PUT',
+				dataType : 'json',
+				contentType : 'application/json',
+				data : JSON.stringify({
+					articleseq : x.articleseq,
+				    cid :$('#write_form input[name="writer"]').val() ,
+					title : $('#write_form input[name="title"]').val(),
+					content :$('#write_form textarea[name="content"]').val() 
+				}),
+//				url : _+'/articles/'+x.articleseq, 
+//				type : 'PUT',
+//				dataType : 'json',
+//				data: JSON.stringify(json) , 
+//				contentType : 'application/json',
+				success : d =>{
+					alert('수정성공');
+					write()
+					$('#recent_updates div.container-fluid').remove()
+					recent_updates()
+				},
+				error : e =>{
+					alert('게시수정성공 실패');
+				}
+			})      	
 		})
 	}
 	
-	return {onCreate}
+	return {onCreate,write}  //나가는게 public !! 다른곳에서 끌고올때 퍼블릭 상태로 해줘야함!
 		
 })();
-	
