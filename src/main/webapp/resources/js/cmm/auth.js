@@ -1,7 +1,7 @@
 "use strict";
 var auth = auth || {};  // 있으면 가져오고 없으면 새로 널(빈땅)객체로 새로 만들어라.
 auth = (()=>{
-	let _,js,css,img,auth_vue_js,brd_js,router_js,cookie_js;
+	let _,js,css,img,auth_vue_js,brd_js,router_js,cookie_js,adm_js;
 	
 	let init =()=>{
 		_ = $.ctx();
@@ -12,6 +12,7 @@ auth = (()=>{
 		brd_js = js+'/brd/brd.js'
 		router_js = js + '/cmm/router.js'
 		cookie_js = js + '/cmm/cookie.js'
+		adm_js = js + '/adm/adm.js'
 		
 	}
     let onCreate =()=>{
@@ -20,7 +21,8 @@ auth = (()=>{
         		$.getScript(auth_vue_js),
         		$.getScript(router_js),
         		$.getScript(brd_js),
-        		$.getScript(cookie_js)
+        		$.getScript(cookie_js),
+        		$.getScript(adm_js)
         ).done(()=>{
         	setContentView()
         	$('a_go_join').click(e=>{
@@ -173,24 +175,25 @@ auth = (()=>{
 		$('#a_go_admin').click(()=>{
 			let ok = confirm('사원입니까?')
 			if(ok){
-				let aid = prompt('사원번호 입력하세요')
-				$.ajax({
-					url:_+'/admins/'+aid,
-					type:'POST',
-					data:JSON.stringify({aid :aid, pwd : prompt('비밀번호를 입력하세요')}),
-					dataType:'json',
-					contentType:'application/json',
-					success:d=>{
-						if(d === 'SUCCESS'){
-							alert('환영합니다')
-							admin.onCreate()
-						}else{
-							alert('접근권한이 없습니다.')
-							app.run(_)
-						}	
-					},
-					error:e=>{}
-				})
+				adm.onCreate()
+//				let aid = prompt('사원번호 입력하세요')
+//				$.ajax({
+//					url:_+'/admins/'+aid,
+//					type:'POST',
+//					data:JSON.stringify({aid :aid, pwd : prompt('비밀번호를 입력하세요')}),
+//					dataType:'json',
+//					contentType:'application/json',
+//					success:d=>{
+//						if(d.msg==='SUCCESS'){
+//							alert('환영합니다')
+//							adm.onCreate()
+//						}else{
+//							alert('접근권한이 없습니다.')
+//							app.run(_)
+//						}	
+//					},
+//					error:e=>{}
+//				})
 				
 			}
 		})

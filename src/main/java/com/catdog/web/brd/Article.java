@@ -1,5 +1,6 @@
 package com.catdog.web.brd;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import com.catdog.web.cus.Customer;
@@ -8,7 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data 
+@Lazy @Data 
 @Component
 @AllArgsConstructor
 @NoArgsConstructor

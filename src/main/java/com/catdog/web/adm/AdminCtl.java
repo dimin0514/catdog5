@@ -33,13 +33,16 @@ public class AdminCtl {
 		IConsumer<Admin> c = t->adminMapper.selectAdminByIdPw(param);
 		c.accept(param);
 		map.clear();
-		map.put("msg","SICCESS");
+		map.put("msg","success");
 		return null;
 	}
 	@PostMapping("/{aid}")
-	public String access(@PathVariable String aid, @RequestBody Admin param){
+	public Map<?,?> access(@PathVariable String aid, @RequestBody Admin param){
+		printer.accept(param.toString());
 		IFunction<Admin, Admin> f = t-> adminMapper.selectAdminByIdPw(param);
-		return (f.apply(param)!=null) ? "SUCCESS" : "FAIL";
+		map.clear();
+		map.put("msg",(f.apply(param)!=null) ? "SUCCESS" : "FAIL");
+		return map;
 			
 	}
 	

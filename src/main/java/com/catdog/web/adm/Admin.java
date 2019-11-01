@@ -1,5 +1,6 @@
 package com.catdog.web.adm;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Component
 @AllArgsConstructor
 @NoArgsConstructor
+@Lazy
 public class Admin{
 	private String aid,pwd,ssn,creditcard,pname,phone,address,email;
 
