@@ -111,13 +111,24 @@ adm = (()=>{
 		$('<button class="btn btn-secondary my-2 my-sm-0" type="submit">go crawl</button>')	
 		.appendTo('#crawl_form')
 		.click(e=>{
-			e.preventDefault() //tx/crawling/google/spring
-			//겟제이슨 이미 존재하는 데이터 그 주소를 가져와 버리는거!!. db 즉 sql문도 이미 실행이 되있는것. 그것도 가져올 수 있다. 쿼리문 던지는 그런 개념이 아님.
-			//이미 매퍼의 sql 문은 다 실행이 되어 답이 있는상태.
-			$.getJSON(_+'/tx/crawling/'+$('form#crawl_form select[name="site"]').val()
-					+'/'+$('form#crawl_form input[type="text"]').val(),d=>{
-				alert(d.text)
-			})
+			e.preventDefault()
+			let arr = [$('#crawl_form select[name="site"]').val(),
+						$('#crawl_form input[type="text"]').val()]
+			if(!$.fn.nullChecker(arr)){
+				$.getJSON(_+'/tx/crawling/'+arr[0]+'/'+arr[1],d=>{
+					alert(d.msg)
+				})
+			}
+//			
+//			$.fn.nullChecker([$('form#crawl_form select[name="site"]').val(),$('form#crawl_form input[type="text"]').val()]?alert('값이 없어요'): alert('값이 있어요'))
+//				}
+//			e.preventDefault() //tx/crawling/google/spring
+//			//겟제이슨 이미 존재하는 데이터 그 주소를 가져와 버리는거!!. db 즉 sql문도 이미 실행이 되있는것. 그것도 가져올 수 있다. 쿼리문 던지는 그런 개념이 아님.
+//			//이미 매퍼의 sql 문은 다 실행이 되어 답이 있는상태.
+//			$.getJSON(_+'/tx/crawling/'+$('form#crawl_form select[name="site"]').val()
+//					+'/'+$('form#crawl_form input[type="text"]').val(),d=>{
+//				alert(d.text)
+//			})
 		})
 //		$.ajax({
 //			url:_+'/tx/tt',
