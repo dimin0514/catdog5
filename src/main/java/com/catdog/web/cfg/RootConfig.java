@@ -18,7 +18,8 @@ import com.zaxxer.hikari.HikariDataSource;
 @MapperScan(basePackages = {"com.catdog.web"})
 @ComponentScan(basePackages = {"com.catdog.web"})
 //@EnableAspectJAutoProxy
-//@EnableTransactionManagement 
+//@EnableTransactionManagement
+//에러나서 일단 수정
 public class RootConfig {
 	@Bean
 	public DataSource dataSource() {
