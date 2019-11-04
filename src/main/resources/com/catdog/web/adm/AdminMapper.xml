@@ -6,5 +6,25 @@
  	<select id="selectAdminByIdPw" resultType="Admin">
  		SELECT * FROM ADMIN WHERE AID = #{aid}
 	</select>
- 
+	  <select id="selectAdmin" resultType="Admin">
+        SELECT * 
+        FROM ADMIN
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+        	 WHERE AID LIKE #{aid} 
+        	 <if test="pwd ! = null">
+        	 and PWD LIKE #{pwd}
+        	 </if>
+        	 <if test="eName ! = null">
+        	 and ENAME LIKE #{ename}
+        	 </if>
+        </trim>
+    </select>
+    <select id="selectAdmin2" parameterType="hashMap" resultType="Admin">
+        SELECT * 
+        FROM ADMIN
+        <trim prefix="WHERE" prefixOverrides="AND |OR ">
+        
+        	 WHERE ${} LIKE #{aid}
+        </trim>
+    </select>
 </mapper>
