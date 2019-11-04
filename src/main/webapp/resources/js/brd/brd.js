@@ -1,7 +1,11 @@
 "use strict"
+//sessionStorage.getItem('ctx')
+//sessionStorage.getItem('js')
+//var _ = sessionStorage.getItem('ctx',web);
+//var js = sessionStorage.getItem('js',_ + '/resources/js')
 var brd = brd || {};
 brd = (()=>{
-	let _,js,brd_vuejs, brd_js , navi_js, navi_vue_js
+	let _,js,brd_vuejs, brd_js , navi_js, navi_vue_js, page_vue_js
 
 	let init=()=>{
 		_ = $.ctx()
@@ -10,14 +14,16 @@ brd = (()=>{
 		brd_vuejs = js+'/vue/brd_vue.js'
 		navi_js = js+'/cmm/navi.js'
 		navi_vue_js = js+'/vue/navi_vue.js'
-
+		page_vue_js = js+'/vue/page_vue.js'
+		alert('page_vue'+page_vue)
 	}
 	let onCreate=()=>{                 //동적인거 여기에다 다 넣음?
 		init()
 		$.when(
 				$.getScript(brd_vuejs),
 				$.getScript(navi_js),
-				$.getScript(navi_vue_js)
+				$.getScript(navi_vue_js),
+				$.getScript(page_vue_js)
 				).done(()=>{
 					setContentView()
 					navi.onCreate()
@@ -28,16 +34,19 @@ brd = (()=>{
 	let setContentView=()=>{
 			$('head').html(brd_vue.brd_head({css: $.css(), img: $.img()}))
 			$('body').addClass('text-center').html(brd_vue.brd_body({css: $.css(), img: $.img()}))
+
 			$(navi_vue.nav()).appendTo('#navi')
-			recent_updates()
+			recent_updates(1)
+			
 	}
-	let recent_updates=()=>{                        //x가 d.count
+	let recent_updates=x=>{                        //x가 d.count
+		alert('호출된 페이지번호:'+x)
 		$('#recent_updates .media').remove()
 		$('#suggestions').remove()
 		$('#recent_updates .d-block').remove()
-		$.getJSON(_+'/articles/',d=>{
-			alert('성공')
-			$.each(d,(i,j)=>{
+		$.getJSON(_+'/articles/page/'+x,d=>{
+			alert('길이'+Object.keys(d).length)
+			$.each(d.articles,(i,j)=>{
 				$( '<div class="media text-muted pt-3">'+
 						'<img data-src="holder.js/32x32?theme=thumb&amp;bg=007bff&amp;fg=007bff&amp;size=1" alt="32x32" class="mr-2 rounded" style="width: 32px; height: 32px;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2232%22%20height%3D%2232%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_16dfcdddb72%20text%20%7B%20fill%3A%23007bff%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A2pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_16dfcdddb72%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20fill%3D%22%23007bff%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2211.5390625%22%20y%3D%2216.9%22%3E32x32%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">'+
 						'          <p id="id_'+i+'"class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">'+
@@ -53,6 +62,7 @@ brd = (()=>{
 					alert('제목클릭')
 					detail(j)
 				})
+				
 //				
 //				res += '<div class="media text-muted pt-3">'+
 //				'<img data-src="holder.js/32x32?theme=thumb&amp;bg=007bff&amp;fg=007bff&amp;size=1" alt="32x32" class="mr-2 rounded" style="width: 32px; height: 32px;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2232%22%20height%3D%2232%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2032%2032%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_16dfcdddb72%20text%20%7B%20fill%3A%23007bff%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A2pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_16dfcdddb72%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20fill%3D%22%23007bff%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2211.5390625%22%20y%3D%2216.9%22%3E32x32%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">'+
@@ -61,6 +71,23 @@ brd = (()=>{
 //				'          </p>'+
 //				'        </div>'
 			})
+			$(page_vue.pagination()).appendTo('#recent_updates')
+			$('#paginagtion').empty()
+//			let t =''
+//			let i = 0
+//			for(;i<(d.length)/10;i++){
+//				t += '<li class="page-item"><a class="page-link" href="#">'+(i+1)+'</a>'
+//			}
+//			$(t).appendTo('#paginagtion')
+			
+			$.each(d.pages,(i,j)=>{
+				$('<li class="page-item"><a class="page-link" href="#">'+j+'</a></li>').appendTo('#paginagtion')
+			})
+
+			
+			
+			
+			
 			//i가 인덱스 j 가 벨류인데 이게 아티클! ui 가 들어가야함
 //				for(let i=0;i<d.count;i++){res += ui}
 //			$('<a>',{
@@ -100,7 +127,7 @@ brd = (()=>{
 			alert('id'+json.cid+'글제목'+json.title+'글내용'+json.content)
 			alert('-?'+_)
 			$.ajax({		//ajax 는 무조건 리턴이 있어야함!! 파라미터가 있는 녀석과 없는 녀석, 람다함수는 fuction. supply
-				url:_+'/articles/',
+				url:_+'/articles/page/',
 				type:'POST',
 				data:JSON.stringify(json),
 				dataType:'json',

@@ -1,5 +1,6 @@
 package com.catdog.web.brd;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +31,7 @@ public class ArticleCtl {
 	@Autowired List<Article> list;
 	
 	
-	@PostMapping("/")
+	@PostMapping("/page/")
 	public Map<?,?> write(@RequestBody Article param){
 		printer.accept("Ctl 로 들어옴");
 		printer.accept("cid:"+param.getCid());
@@ -45,13 +46,23 @@ public class ArticleCtl {
 		map.put("count",s.get());
 		return map;
 	}
-	@GetMapping("/") //겟매핑에서 아무것도 없으면 전체를 가져와라
-	public List<Article> list(){
+	@GetMapping("/page/{pageNo}") //겟매핑에서 아무것도 없으면 전체를 가져와라
+	public Map<?,?> list(@PathVariable String pageNo){
 		list.clear();  // 람다는 청소하고 담아야함!
 		ISupplier<List<Article>> s =()-> articleMapper.selectAll();
-		printer.accept("전체글목록\n"+s.get());
-		return s.get();
+		printer.accept("해당페이지 넘버\n"+s.get());
+		map.clear();
+		map.put("articles",s.get());
+		map.put("pages",Arrays.asList(1,2,3,4,5));
+		return map;
 	}
+//	@GetMapping("/") //겟매핑에서 아무것도 없으면 전체를 가져와라
+//	public List<Article> list(){
+//		list.clear();  // 람다는 청소하고 담아야함!
+//		ISupplier<List<Article>> s =()-> articleMapper.selectAll();
+//		printer.accept("전체글목록\n"+s.get());
+//		return s.get();
+//	}
 	
 	@GetMapping("/count") //겟매핑에서 아무것도 없으면 전체를 가져와라
 	public Map<?,?> countBrd() {  //아티클에 속성이 없음, 대게 답이 없으면 map

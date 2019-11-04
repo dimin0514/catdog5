@@ -12,7 +12,11 @@
     SELECT COUNT(*) from ARTICLES
     </select>
     <select id="selectAll" resultType="Article">
-    	SELECT A.BOARD_TYPE AS boardType, A.* FROM ARTICLES A
+    	SELECT A.BOARD_TYPE AS boardType, A.* FROM (
+			SELECT * 
+			FROM ARTICLES
+			ORDER by ARTICLESEQ DESC) A
+			LIMIT 0,5
     </select>
     <select id="selectArticle" resultType="Article">
 		SELECT * FROM ARTICLES WHERE ARTICLESEQ LIKE #{articleseq}
