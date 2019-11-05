@@ -18,20 +18,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.catdog.web.cmm.IConsumer;
 import com.catdog.web.cmm.ISupplier;
+import com.catdog.web.pxy.Proxy;
+import com.catdog.web.pxy.ProxyMap;
 import com.catdog.web.utl.Printer;
 
 @RestController
 @RequestMapping("/articles")
 public class ArticleCtl {
 	public static Logger logger = LoggerFactory.getLogger(ArticleCtl.class);
-	@Autowired Map<String,Object> map;
 	@Autowired Article article;
 	@Autowired Printer printer;
 	@Autowired ArticleMapper articleMapper;
 	@Autowired List<Article> list;
+	@Autowired Proxy pxy;
+	@Autowired ProxyMap map;
 	
 	
-	@PostMapping("/page/")
+	@PostMapping("/")
 	public Map<?,?> write(@RequestBody Article param){
 		printer.accept("Ctl 로 들어옴");
 		printer.accept("cid:"+param.getCid());
@@ -40,21 +43,24 @@ public class ArticleCtl {
 		c.accept(param);
 		
 		//<> 제네릭이 파라미터 타입임! 왜냐? consumer 니깐
-		map.clear();
-		map.put("msg","success");
-		ISupplier<Integer> s =()->  articleMapper.countArtseq();
-		map.put("count",s.get());
-		return map;
+//		map.clear();
+//		map.put("msg","success");
+		ISupplier<String> s =()->  articleMapper.countArtseq();
+		map.accept(Arrays.asList("msg","count"),Arrays.asList("SUCCESS",s.get()));
+		return map.get();
 	}
-	@GetMapping("/page/{pageNo}") //겟매핑에서 아무것도 없으면 전체를 가져와라
-	public Map<?,?> list(@PathVariable String pageNo){
+	@GetMapping("/page/{pageNo}/size/{pageSize}") //겟매핑에서 아무것도 없으면 전체를 가져와라
+	public Map<?,?> list(@PathVariable String pageNo, @PathVariable String pageSize){
+		pxy.setPageNum(pxy.parseInt(pageNo));
+		pxy.setPageSize(pxy.parseInt(pageSize));
+		pxy.paging();
 		list.clear();  // 람다는 청소하고 담아야함!
-		ISupplier<List<Article>> s =()-> articleMapper.selectAll();
+		ISupplier<List<Article>> s =()-> articleMapper.selectAll(pxy);
 		printer.accept("해당페이지 넘버\n"+s.get());
-		map.clear();
-		map.put("articles",s.get());
-		map.put("pages",Arrays.asList(1,2,3,4,5));
-		return map;
+		map.accept(Arrays.asList("articles","pages"), Arrays.asList(s.get(),Arrays.asList(1,2,3,4,5)));
+//		map.put("articles",s.get());
+//		map.put("pages",Arrays.asList(1,2,3,4,5));
+		return map.get();
 	}
 //	@GetMapping("/") //겟매핑에서 아무것도 없으면 전체를 가져와라
 //	public List<Article> list(){
@@ -66,11 +72,13 @@ public class ArticleCtl {
 	
 	@GetMapping("/count") //겟매핑에서 아무것도 없으면 전체를 가져와라
 	public Map<?,?> countBrd() {  //아티클에 속성이 없음, 대게 답이 없으면 map
-		ISupplier<Integer> s =()->  articleMapper.countArtseq();
+		ISupplier<String> s =()->  articleMapper.countArtseq();
 		printer.accept("카운터가 뭐냐?"+s);
-		map.clear();
-		map.put("count",s.get());
-		return map;
+		map.accept(Arrays.asList("count"), Arrays.asList(s.get()));
+//		map.clear();
+//		map.put("count",s.get());
+//		return map;
+		return map.get();
 	}
 	
 	@GetMapping("/{articleseq}")
@@ -91,12 +99,13 @@ public class ArticleCtl {
 
 	@DeleteMapping("/{articleseq}")
 	public Map<?,?> delete(@PathVariable String articleseq, @RequestBody Article param) {
-		map.clear();
+//		map.clear();
 		IConsumer<Article> c =  t -> articleMapper.deleteArticle(param);
 		c.accept(param);
-		map.clear();
-		map.put("msg","success");
-		return map;
+//		map.clear();
+//		map.put("msg","success");
+		map.accept(Arrays.asList("msg"), Arrays.asList("success"));
+		return map.get();
 	}
 
 }

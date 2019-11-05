@@ -13,6 +13,6 @@
  	<script src="<%=application.getContextPath()%>/resources/js/brd/brd_vue.js"></script> 
  	<script src="<%=application.getContextPath()%>/resources/js/cmm/navi.js"></script> 
 <script>
-	app.run('<%=application.getContextPath() %>');
+	app.run('<%=application.getContextPath()%>');
 </script>
 </html>

@@ -5,16 +5,17 @@
 //var js = sessionStorage.getItem('js',_ + '/resources/js')
 var brd = brd || {};
 brd = (()=>{
-	let _,js,brd_vuejs, brd_js , navi_js, navi_vue_js, page_vue_js
+	let _,js,brd_vuejs, brd_js , navi_js, navi_vue_js, page_vue_js , compo_vue_js
 
 	let init=()=>{
-		_ = $.ctx()
+		_ = sessionStorage.getItem('ctx')
 		js = $.js()
 		brd_js = js+'/brd/brd.js'
 		brd_vuejs = js+'/vue/brd_vue.js'
 		navi_js = js+'/cmm/navi.js'
 		navi_vue_js = js+'/vue/navi_vue.js'
 		page_vue_js = js+'/vue/page_vue.js'
+		compo_vue_js = js + '/vue/compo_vue.js/'
 		alert('page_vue'+page_vue)
 	}
 	let onCreate=()=>{                 //동적인거 여기에다 다 넣음?
@@ -23,7 +24,8 @@ brd = (()=>{
 				$.getScript(brd_vuejs),
 				$.getScript(navi_js),
 				$.getScript(navi_vue_js),
-				$.getScript(page_vue_js)
+				$.getScript(page_vue_js),
+				$.getScript(compo_vue_js)
 				).done(()=>{
 					setContentView()
 					navi.onCreate()
@@ -36,7 +38,7 @@ brd = (()=>{
 			$('body').addClass('text-center').html(brd_vue.brd_body({css: $.css(), img: $.img()}))
 
 			$(navi_vue.nav()).appendTo('#navi')
-			recent_updates(1)
+			recent_updates({page:'1',size:'5'})
 			
 	}
 	let recent_updates=x=>{                        //x가 d.count
@@ -44,7 +46,7 @@ brd = (()=>{
 		$('#recent_updates .media').remove()
 		$('#suggestions').remove()
 		$('#recent_updates .d-block').remove()
-		$.getJSON(_+'/articles/page/'+x,d=>{
+		$.getJSON(_+'/articles/page/'+x.page+'/size/'+x.size,d=>{
 			alert('길이'+Object.keys(d).length)
 			$.each(d.articles,(i,j)=>{
 				$( '<div class="media text-muted pt-3">'+
@@ -72,7 +74,40 @@ brd = (()=>{
 //				'        </div>'
 			})
 			$(page_vue.pagination()).appendTo('#recent_updates')
+			
+			
+			
+			
+//			$('#crawl_form input[class="form-control mr-sm-2"]')
+//			.css({width:'80%'})
+//			$.each([{sub:'naver.com'},{sub:'daum.net'},{sub:'google.co.kr'},{sub:'youtube.com'}],(i,j)=>{
+//			$('<option value='+j.sub+'>'+j.sub+'</option>').appendTo('#recent_updates')
+//			})
+//			$('#pNum').html(compo_vue.pageSize())
+//			$(compo_vue.pageSize()).appendTo('#recent_updates')
+//			$(compo_vue.pageSiez2()).appendTo('#recent_updates')
+		
+			
 			$('#paginagtion').empty()
+			$('#recent_updates div.container h2').remove() 
+			$('<form id="paging_form" class="form-inline my-2 my-lg-0" style="float: right">'+
+				'  <select name="site" size="1">'+
+				'  </select>'+
+				'</form>').prependTo('#recent_updates div.container')
+			$('#paging_form input[class="form-control mr-sm-2"]').css({width:'80%'})
+			
+			$.each([{sub:'5개보기'},{sub:'10개보기'},{sub:'15개보기'},{sub:'20개 보기'}],(i,j)=>{
+				$('<option value='+j.sub+'>'+j.sub+'</option>')
+				.appendTo('#paging_form select')
+			})
+
+			
+			
+			
+			
+			
+			
+			
 //			let t =''
 //			let i = 0
 //			for(;i<(d.length)/10;i++){
@@ -127,7 +162,7 @@ brd = (()=>{
 			alert('id'+json.cid+'글제목'+json.title+'글내용'+json.content)
 			alert('-?'+_)
 			$.ajax({		//ajax 는 무조건 리턴이 있어야함!! 파라미터가 있는 녀석과 없는 녀석, 람다함수는 fuction. supply
-				url:_+'/articles/page/',
+				url: sessionStorage.getItem('ctx')+'/articles/',
 				type:'POST',
 				data:JSON.stringify(json),
 				dataType:'json',

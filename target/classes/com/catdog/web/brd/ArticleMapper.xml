@@ -8,15 +8,15 @@
             #{cid}, #{boardType}, #{title}, #{content}
         )
     </insert>
-    <select id="countArtseq" resultType="int">
+    <select id="countArtseq" resultType="String">
     SELECT COUNT(*) from ARTICLES
     </select>
-    <select id="selectAll" resultType="Article">
+    <select id="selectAll" resultType="Article" parameterType="Proxy">
     	SELECT A.BOARD_TYPE AS boardType, A.* FROM (
 			SELECT * 
 			FROM ARTICLES
 			ORDER by ARTICLESEQ DESC) A
-			LIMIT 0,5
+			LIMIT #{startRow},#{pageSize}
     </select>
     <select id="selectArticle" resultType="Article">
 		SELECT * FROM ARTICLES WHERE ARTICLESEQ LIKE #{articleseq}
