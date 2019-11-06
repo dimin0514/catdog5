@@ -57,7 +57,11 @@ public class ArticleCtl {
 		list.clear();  // 람다는 청소하고 담아야함!
 		ISupplier<List<Article>> s =()-> articleMapper.selectAll(pxy);
 		printer.accept("해당페이지 넘버\n"+s.get());
-		map.accept(Arrays.asList("articles","pages"), Arrays.asList(s.get(),Arrays.asList(1,2,3,4,5)));
+		int ran = pxy.random(18, 17);
+		printer.accept("랜덤수는?"+ran);
+		map.accept(Arrays.asList("articles","pages","pxy"), Arrays.asList(s.get(),Arrays.asList(1,2,3,4,5),pxy));
+//		map.accept(Arrays.asList("articles","pages","proxy"), Arrays.asList(s.get(),Arrays.asList(1,2,3,4,5),pxy)) 담아서 바로js로 보낼 수 있음!;
+		
 //		map.put("articles",s.get());
 //		map.put("pages",Arrays.asList(1,2,3,4,5));
 		return map.get();

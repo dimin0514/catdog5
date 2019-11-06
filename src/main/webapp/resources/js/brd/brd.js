@@ -46,6 +46,9 @@ brd = (()=>{
 		$('#recent_updates .media').remove()
 		$('#suggestions').remove()
 		$('#recent_updates .d-block').remove()
+		$('#recent_updates .container').remove()
+//		$('#pagination').remove()
+//		$('#paging_form').remove()
 		$.getJSON(_+'/articles/page/'+x.page+'/size/'+x.size,d=>{
 			alert('길이'+Object.keys(d).length)
 			$.each(d.articles,(i,j)=>{
@@ -74,8 +77,7 @@ brd = (()=>{
 //				'        </div>'
 			})
 			$(page_vue.pagination()).appendTo('#recent_updates')
-			
-			
+
 			
 			
 //			$('#crawl_form input[class="form-control mr-sm-2"]')
@@ -96,17 +98,18 @@ brd = (()=>{
 				'</form>').prependTo('#recent_updates div.container')
 			$('#paging_form input[class="form-control mr-sm-2"]').css({width:'80%'})
 			
-			$.each([{sub:'5개보기'},{sub:'10개보기'},{sub:'15개보기'},{sub:'20개 보기'}],(i,j)=>{
-				$('<option value='+j.sub+'>'+j.sub+'</option>')
-				.appendTo('#paging_form select')
+			$.each([
+				{sub:'5개보기',val:'5'},
+				{sub:'10개보기',val:'10'},
+				{sub:'15개보기',val:'15'},
+				{sub:'20개 보기',val:'20'}],
+				(i,j)=>{$('<option value='+j.val+'>'+j.sub+'</option>').appendTo('#paging_form select')
 			})
-
-			
-			
-			
-			
-			
-			
+			$('#paging_form option[value="'+d.pxy.pageSize+'"]').attr('selected',true)
+			$('#paging_form').change(()=>{
+				alert('선택한 보기: '+$('#paging_form option:selected').val())
+				recent_updates({page: '1', size: $('#paging_form option:selected').val()})
+			})
 			
 //			let t =''
 //			let i = 0
@@ -115,11 +118,27 @@ brd = (()=>{
 //			}
 //			$(t).appendTo('#paginagtion')
 			
+			
+			if(d.pxy.existPrev){
+				$('<li class="page-item"><a class="page-link" href="#">이전</a></li>').appendTo('#paginagtion')
+			}
+			
 			$.each(d.pages,(i,j)=>{
-				$('<li class="page-item"><a class="page-link" href="#">'+j+'</a></li>').appendTo('#paginagtion')
+				$('<li class="page-item"><a class="page-link" href="#">'+j+'</a></li>')
+				.appendTo('#paginagtion')
+				.click(()=>{
+					recent_updates({page:j,size:'5'})
+//					alert('클릭'+j)
+					
+				})
 			})
 
 			
+			if(d.pxy.existNext){
+      			$('<li class="page-item"><a class="page-link" href="#">다음</a></li>')
+      			.appendTo('#paginagtion')
+      		}
+			 // paginagtion,   paginagtion
 			
 			
 			
@@ -169,7 +188,7 @@ brd = (()=>{
 				contentType:'application/json',
 				success:d=>{
 					$('#recent_updates div.container-fluid').remove()
-					recent_updates()
+					recent_updates({page:'1',size:'5'})
 					
 //					$.getScript(brd_vuejs).done(()=>{
 //                        $('#recent_updates').html('<h1>목록 불러오기</h1>')
