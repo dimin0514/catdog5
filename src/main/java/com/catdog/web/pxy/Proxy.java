@@ -23,30 +23,49 @@ import lombok.Data;
 
 @Component @Data @Lazy
 public class Proxy {
-	private int pageNum, pageSize, startRow, endRow;
+	private int totalCount, startRow, endRow,
+				pageCount, pageNum, pageSize, startPage, endPage,
+				blockCount, blockNum, nextBlock, prevBlock;
 	private boolean existPrev,existNext;
 	private String search;
 	private final int BLOCK_SIZE = 5;
+	private List<Integer> pages;
 	@Autowired Printer printer;
 	@Autowired ArticleMapper articleMapper;
 	
 	@SuppressWarnings("unused")
 	public void paging() {
 		ISupplier<String> s = ()->articleMapper.countArtseq();
-		int totalCount = Integer.parseInt(s.get());
-		int pageCount = totalCount % pageSize == 0 ? 
+		totalCount = Integer.parseInt(s.get());
+		pageCount = totalCount % pageSize == 0 ? 
 					(totalCount / pageSize):((totalCount / pageSize) + 1);
 		startRow = pageSize*(pageNum-1);
 		endRow = (pageNum == pageCount) ? totalCount -1 : startRow +pageSize -1;
 		
-		int blockCount = pageCount % BLOCK_SIZE == 0 ? (pageCount / BLOCK_SIZE):((pageCount / BLOCK_SIZE) + 1); //count 는 총수?
-		int blockNum = (pageNum -1) / BLOCK_SIZE; //num 인덱스 넘버? 그래서 0부터 시작?
-		int startPage = blockNum * BLOCK_SIZE + 1;
-		int endPage = (blockNum + 1 != blockCount) ? startPage + BLOCK_SIZE - 1 : pageCount;
+		blockCount = pageCount % BLOCK_SIZE == 0 ? (pageCount / BLOCK_SIZE):((pageCount / BLOCK_SIZE) + 1); //count 는 총수?
+		blockNum = (pageNum -1) / BLOCK_SIZE; //num 인덱스 넘버? 그래서 0부터 시작?
+		startPage = blockNum * BLOCK_SIZE + 1;
+		endPage = ((blockNum+1)!= blockCount) ? (startPage+BLOCK_SIZE-1) : pageCount;
 		existPrev = blockNum != 0;
 //      트루 펄스면 3항은 이것처럼 생략할 수 있음 . boolean existPrev = (blockNum != 0)? true : false;
-		existNext = blockNum + 1 != blockCount;
+		existNext = (blockNum + 1) != blockCount;
 //		boolean existNext = (blockNum + 1 != blockCount)? true : false;
+		
+		
+		pages = null;
+//		for(int i = startPage; i <= endPage; i++) {
+//			pages.add(i);
+//		}
+		List<Integer> x = new ArrayList<Integer>();
+		for(int i = startPage; i<= endPage ; i++) {
+			x.add(i);
+		}
+		pages = x;
+		System.out.println("페이지수"+pages);
+		nextBlock = startPage + pageSize ;
+		prevBlock = startPage - pageSize;
+		
+		
 	}
 	public int parseInt(String param) {
 		Function<String,Integer> f = s -> Integer.parseInt(s);

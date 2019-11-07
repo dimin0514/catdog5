@@ -47,9 +47,8 @@ brd = (()=>{
 		$('#suggestions').remove()
 		$('#recent_updates .d-block').remove()
 		$('#recent_updates .container').remove()
-//		$('#pagination').remove()
-//		$('#paging_form').remove()
 		$.getJSON(_+'/articles/page/'+x.page+'/size/'+x.size,d=>{
+			let pxy = d.pxy
 			alert('길이'+Object.keys(d).length)
 			$.each(d.articles,(i,j)=>{
 				$( '<div class="media text-muted pt-3">'+
@@ -105,7 +104,7 @@ brd = (()=>{
 				{sub:'20개 보기',val:'20'}],
 				(i,j)=>{$('<option value='+j.val+'>'+j.sub+'</option>').appendTo('#paging_form select')
 			})
-			$('#paging_form option[value="'+d.pxy.pageSize+'"]').attr('selected',true)
+			$('#paging_form option[value="'+pxy.pageSize+'"]').attr('selected',true)
 			$('#paging_form').change(()=>{
 				alert('선택한 보기: '+$('#paging_form option:selected').val())
 				recent_updates({page: '1', size: $('#paging_form option:selected').val()})
@@ -119,24 +118,46 @@ brd = (()=>{
 //			$(t).appendTo('#paginagtion')
 			
 			
-			if(d.pxy.existPrev){
-				$('<li class="page-item"><a class="page-link" href="#">이전</a></li>').appendTo('#paginagtion')
-			}
-			
-			$.each(d.pages,(i,j)=>{
-				$('<li class="page-item"><a class="page-link" href="#">'+j+'</a></li>')
+			if(pxy.existPrev){
+				$('<li class="page-item"><a class="page-link" href="#">이전</a></li>')
 				.appendTo('#paginagtion')
 				.click(()=>{
-					recent_updates({page:j,size:'5'})
-//					alert('클릭'+j)
-					
+					recent_updates({page:pxy.prevBlock,size:pxy.pageSize})
 				})
-			})
+			}
+			
+			let i = 0
+			for(i = pxy.startPage; i<= pxy.endPage ; i++) {
+				if(pxy.pageNum == i){
+					$('<li class="page-item"><a class="page-link" href="#">'+i+'</a></li>')
+					.appendTo('#paginagtion')
+					.addClass('active')
+				}else{
+					$('<li class="page-item"><a class="page-link" href="#">'+i+'</a></li>')
+					.appendTo('#paginagtion')
+					.click(function(){
+						alert('페이지번호>>>:'+$(this).children('.page-link').text())
+						recent_updates({page:$(this).children('.page-link').text(), size: pxy.pageSize})
+					})
+				}
+			}
+			
+//			$.each(pxy.pages,(i,j)=>{
+//				$('<li class="page-item"><a class="page-link" href="#">'+j+'</a></li>')
+//				.appendTo('#paginagtion')
+//				.click(()=>{
+//					recent_updates({page:j,size:'5'})				
+//				})
+//			})
 
 			
-			if(d.pxy.existNext){
+			if(pxy.existNext){
       			$('<li class="page-item"><a class="page-link" href="#">다음</a></li>')
       			.appendTo('#paginagtion')
+      			.click(e=>{
+      				e.preventDefault()
+					recent_updates({page:pxy.nextBlock,size:pxy.pageSize})
+				})
       		}
 			 // paginagtion,   paginagtion
 			
@@ -188,8 +209,8 @@ brd = (()=>{
 				contentType:'application/json',
 				success:d=>{
 					$('#recent_updates div.container-fluid').remove()
+					alert('글쓰기 성공')
 					recent_updates({page:'1',size:'5'})
-					
 //					$.getScript(brd_vuejs).done(()=>{
 //                        $('#recent_updates').html('<h1>목록 불러오기</h1>')
 //                    })
@@ -248,7 +269,7 @@ brd = (()=>{
 					alert('삭제 성공')
 				    write()
 					$('#recent_updates div.container-fluid').remove()
-					recent_updates()
+					recent_updates({page:'1',size:'5'})
 				},
 				error:d=>{
 					alert('ajax 삭제 실패')
@@ -290,7 +311,7 @@ brd = (()=>{
 					alert('수정성공');
 					write()
 					$('#recent_updates div.container-fluid').remove()
-					recent_updates()
+					recent_updates({page:'1',size:'5'})
 				},
 				error : e =>{
 					alert('게시수정성공 실패');

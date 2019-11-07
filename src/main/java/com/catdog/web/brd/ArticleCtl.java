@@ -59,7 +59,7 @@ public class ArticleCtl {
 		printer.accept("해당페이지 넘버\n"+s.get());
 		int ran = pxy.random(18, 17);
 		printer.accept("랜덤수는?"+ran);
-		map.accept(Arrays.asList("articles","pages","pxy"), Arrays.asList(s.get(),Arrays.asList(1,2,3,4,5),pxy));
+		map.accept(Arrays.asList("articles","pxy"), Arrays.asList(s.get(),pxy));
 //		map.accept(Arrays.asList("articles","pages","proxy"), Arrays.asList(s.get(),Arrays.asList(1,2,3,4,5),pxy)) 담아서 바로js로 보낼 수 있음!;
 		
 //		map.put("articles",s.get());
